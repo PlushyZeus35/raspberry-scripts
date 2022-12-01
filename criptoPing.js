@@ -53,14 +53,21 @@ async function getBinanceAssets(apikey, apisecret){
 }
 
 async function setNewBinanceData(assets, userId, conn){
-  try{
-    for(let i=0; i<assets.length;i++){
-      const value = parseFloat(assets[i].free) + parseFloat(assets[i].locked);
-      const res = conn.query("INSERT INTO `criptodata` (`asset`, `value`, `fromSystem`, `createdAt`, `updatedAt`, `deletedAt`, `userId`) VALUES (?, ?, ?, ?, ?, ?, ?)", [assets[i].asset, value, 0, '2022-11-29 20:34:13', '2022-11-29 20:34:13', null, userId]);
-      //console.log(res);
+  let date_time = new Date();
+  let date = ("0" + date_time.getDate()).slice(-2);
+  let month = ("0" + (date_time.getMonth() + 1)).slice(-2);
+  let year = date_time.getFullYear();
+  let hours = date_time.getHours();
+  let minutes = date_time.getMinutes();
+  let seconds = date_time.getSeconds();
+  let finalDate = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+  for(let j=0;j<assets.length;j++){
+	try{
+		const value = parseFloat(assets[j].free) + parseFloat(assets[j].locked);
+		await conn.query("INSERT INTO `criptodata` (`asset`, `value`, `fromSystem`, `createdAt`, `updatedAt`, `deletedAt`, `userId`) VALUES (?, ?, ?, ?, ?, ?, ?)", [assets[j].asset, value, 0, finalDate, finalDate, null, userId]);
+	}catch(error){
+      EmailCtrl.sendEmail('plushyzeus35@gmail.com','Script error',error.toString(),[]);
     }
-  }catch(error){
-    EmailCtrl.sendEmail('plushyzeus35@gmail.com','Script error',error.toString(),[]);
   }
 }
 
@@ -69,41 +76,11 @@ async function run(){
   const rows = await getBinanceKeys(conn);
   for(let i=0; i<rows.length;i++){
     const userAssets = await getBinanceAssets(rows[i].apikey, rows[i].apisecret);
-    //console.log(userAssets);
-    setNewBinanceData(userAssets, rows[i].userId, conn);
+    console.log(userAssets);
+    await setNewBinanceData(userAssets, rows[i].userId, conn);
   }
   closeConnection(conn);
 }
 
-//getConnection(pool);
-//asyncFunction();
+
 run();
-
-////////
-/*const { Spot } = require('@binance/connector')
-
-const apiKey = 'qPazU1QrtMr0psFO0sFa7kn0W3Wxw8gOg3cyfvKtFX2534f0rPpleAWvmOjfZWoC'
-const apiSecret = 'tGHBnV5WHYLqoAfWRIkmvUiHOJrh4dKHMgyoT4edqGHJwX7u3jCvk6BuMiEaaQQD'
-const client = new Spot(apiKey, apiSecret)
-
-/* GET Index page. 
-router.get('/', (req, res) => {
-    const myAssets = [];
-    // Get account information
-    client.account()
-        .then((response) => {
-            client.logger.log(response.data.balances.length);
-            //client.logger.log(response.data);
-            for(let i=0; i<response.data.balances.length; i++){
-                if(parseFloat(response.data.balances[i].free)>0 || parseFloat(response.data.balances[i].locked)>0){
-                    myAssets.push(response.data.balances[i]);
-                }
-                client.logger.log(response.data.balances[i]);
-            }
-            console.log(myAssets);
-        })
-        .catch((error) => {
-            console.error(error);
-          });
-    res.send('Hello World!');
-})*/
