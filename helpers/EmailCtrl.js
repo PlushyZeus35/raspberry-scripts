@@ -44,7 +44,7 @@ EmailCtrl.sendHTML = async function(receiver,subject='PlushyApp Message Info',ht
         service: 'Gmail',
         auth: {
             user: 'borja.lorenzo.adm@gmail.com',
-            pass: 'drizilloijnvrylo'    // Contraseña de aplicación en ajustes de Google
+            pass: config.email.password    // Contraseña de aplicación en ajustes de Google
         }
     });
     // Definimos el email
