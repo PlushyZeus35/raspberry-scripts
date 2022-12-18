@@ -84,4 +84,17 @@ EmailCtrl.sendErrorMail = async function(subject='', error='', message='', extra
     })
 }
 
+EmailCtrl.sendBirthMail = async function(subject='', birthdays='', extraAttachments=[]){
+    const mainAttachments = [{filename: 'Logo.png', path: path.join(__dirname, '../static/img/zeus.png'),cid: 'logo'},{filename: 'Bug.png', path: path.join(__dirname, '../static/img/bug.png'),cid: 'bug'}];
+    const attachments = mainAttachments.concat(extraAttachments);
+    fs.readFile(path.join(__dirname, '../email/birthday.html'), 'utf-8', function(err,data) {
+        if(!err){
+            data = data.replace('{{births}}', birthdays);
+            EmailCtrl.sendHTML(config.email.receiver,subject , data, attachments);
+        }else{
+            console.log(err)
+        }
+    })
+}
+
 module.exports = EmailCtrl;
