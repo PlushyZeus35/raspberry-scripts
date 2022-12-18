@@ -4,7 +4,6 @@ const EmailCtrl = require('./helpers/EmailCtrl');
 const today = new Date();
 const day = today.getDate();
 const month = today.getMonth()+1;
-console.log({day,month});
 
 async function run(){
     const connectionData = await Database.openConnection();
@@ -32,11 +31,11 @@ async function run(){
             for(let j=0; j<birthMap[i].names.length; j++){
                 names += birthMap[i].names[j] + ' ';
             }
-            EmailCtrl.sendEmail(birthMap[i].email,'Cumpleaños!', 'Hoy es el cumple de: ' + names,[]);
+            EmailCtrl.sendBirthMail('¡Tienes cumpleaños que celebrar!',names,[]);
         }
         
     }catch(error){
-        EmailCtrl.sendEmail('plushyzeus35@gmail.com','Script error',error.toString(),[]);
+        EmailCtrl.sendErrorMail('Se ha producido un error en un script de servidor','birthdayTracker.js',error.toString());
     }
 
     Database.closeConnection(connectionData.pool, conn);

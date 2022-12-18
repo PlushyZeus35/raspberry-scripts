@@ -7,7 +7,7 @@ CriptoHelper.getBinanceKeys = async function(conn){
         const rows = await conn.query("SELECT apikey, apisecret, userId FROM binances WHERE active = true");
         return rows;
     }catch(error){
-        EmailCtrl.sendEmail('plushyzeus35@gmail.com','Script error',error.toString(),[]);
+        EmailCtrl.sendErrorMail('Se ha producido un error en un script de servidor','Crypto.js',error.toString());
     }
 }
 
@@ -24,7 +24,7 @@ CriptoHelper.getBinanceAssets = async function(apikey, apisecret){
       }
       return myAssets;
     }catch(error){
-      EmailCtrl.sendEmail('plushyzeus35@gmail.com','Script error',error.toString(),[]);
+        EmailCtrl.sendErrorMail('Se ha producido un error en un script de servidor','Crypto.js',error.toString());
       return [];
     }
 }
