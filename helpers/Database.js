@@ -15,7 +15,7 @@ DatabaseHelper.openConnection = async function(){
         await conn.query("use personalApp");
         return {pool: pool,conn: conn};
     }catch(error){
-        EmailCtrl.sendEmail('plushyzeus35@gmail.com','Script error',error.toString(),[]);
+        EmailCtrl.sendErrorMail('Se ha producido un error en un script de servidor','Database.js',error.toString());
     }
 }
 

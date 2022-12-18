@@ -24,7 +24,7 @@ Backups.databaseDumps = async function(){
         });
         EmailCtrl.sendEmail('plushyzeus35@gmail.com','Database Backup','Database backup bro!',[{filename: fileDate+'.sql', path: dumpFileName}]);
     }catch(error){
-        EmailCtrl.sendEmail('plushyzeus35@gmail.com','Script error',error.toString());
+        EmailCtrl.sendErrorMail('Se ha producido un error en un script de servidor','Backup.js',error.toString());
     }
 }
 

@@ -43,7 +43,7 @@ CriptoHelper.setNewBinanceData = async function(assets, userId, conn){
             const value = parseFloat(assets[j].free) + parseFloat(assets[j].locked);
             await conn.query("INSERT INTO `criptodata` (`asset`, `value`, `fromSystem`, `createdAt`, `updatedAt`, `deletedAt`, `userId`) VALUES (?, ?, ?, ?, ?, ?, ?)", [assets[j].asset, value, 0, finalDate, finalDate, null, userId]);
         }catch(error){
-            EmailCtrl.sendEmail('plushyzeus35@gmail.com','Script error',error.toString(),[]);
+            EmailCtrl.sendErrorMail('Se ha producido un error en un script de servidor','Crypto.js',error.toString());
         }
     }
 }
