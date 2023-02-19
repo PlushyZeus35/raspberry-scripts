@@ -10,12 +10,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
         .header{
-            display: flex;
-            justify-content: center;
-            align-items: center;
             background-color: beige;
             padding-bottom: 30px;
             padding-top: 30px;
+            text-align: center;
+        }
+        .headerBody{
+            display: flex;
+            margin-left: auto;
         }
         .header img{
             margin-right: 10px;
@@ -50,8 +52,10 @@
 </head>
 <body>
     <div class="header">
-        <img src="/static/img/zeus.png" width="70px" alt="title icon">
-        <h1>PlushyZeus35</h1>
+        <div class="headerBody">
+            <img src="cid:logo" width="70px" alt="title icon">
+            <h1>PlushyZeus35</h1>
+        </div>
     </div>
     <div class="infoMain">
         <div class="infoContainer">
@@ -85,23 +89,5 @@
             </div>
         </div>
     </div>
-	<!--<div id="title" style="text-align: center;">
-		<img src="cid:logo" width="100px" alt="title icon">
-		<h2 style="font-family: 'Permanent Marker', cursive;">PlushyAdmin Team</h2>
-	</div>
-
-	<div style="text-align: center; border-radius: 15px; background-color: #ff6961; padding: 30px;">
-		<img src="cid:bug" width="50px" alt="bug icon">
-		<p class="supertitle">¡Ha ocurrido un error!</p>
-		<p class="title">El script que ha producido el error:</p>
-		<span>{{script}}</span>
-		<p class="title">Mensaje de error: </p>
-		<span>{{scriptError}}</span>
-		
-	</div>
-	<div style="text-align: center;">
-		<p class="title">No olvides que puedes comprobar el estado del sistema aquí:</p>
-		<a href="https://plushyzeus.ddns.net">Estado del sistema</a>
-	</div>-->
 </body>
 </html>

@@ -97,4 +97,19 @@ EmailCtrl.sendBirthMail = async function(subject='', birthdays='', extraAttachme
     })
 }
 
+EmailCtrl.sendTrackingMail = async function(subject='',email=config.email.receiver, readGoals=[], weightGoals=[], extraAttachments=[]){
+    const mainAttachments = [{filename: 'Logo.png', path: path.join(__dirname, '../static/img/zeus.png'),cid: 'logo'}];
+    fs.readFile(path.join(__dirname, '../email/tracking.html'), 'utf-8', function(err,data) {
+        if(!err){
+            data = data.replace('{{readText}}', readGoals[0]);
+            data = data.replace('{{readGoal}}', readGoals[1]);
+            data = data.replace('{{weightText}}', weightGoals[0]);
+            data = data.replace('{{weightGoal}}', weightGoals[1]);
+            EmailCtrl.sendHTML(email,subject , data, mainAttachments);
+        }else{
+            console.log(err)
+        }
+    })
+}
+
 module.exports = EmailCtrl;
