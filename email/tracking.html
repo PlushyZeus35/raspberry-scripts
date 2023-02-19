@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .header{
+            background-color: beige;
+            padding-bottom: 30px;
+            padding-top: 30px;
+            text-align: center;
+        }
+        .headerBody{
+            display: flex;
+            margin-left: auto;
+        }
+        .header img{
+            margin-right: 10px;
+        }
+        .infoMain{
+            display: flex;
+            justify-content: center;
+        }
+
+        .infoContainer{
+            margin-top: 10px;
+            width: 60vw;
+            height: 60vh;
+        }
+		.title{
+			font-size: 21px;
+		}
+		.supertitle{
+			font-size: 31px;
+		}
+        .infoTitle{
+            font-weight: bolder;
+            font-size: 21px;
+        }
+        @media screen and (max-width: 700px) {
+            .infoContainer{
+                width: 100vw;
+            }
+        }
+	</style>
+	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <div class="headerBody">
+            <img src="cid:logo" width="70px" alt="title icon">
+            <h1>PlushyZeus35</h1>
+        </div>
+    </div>
+    <div class="infoMain">
+        <div class="infoContainer">
+            <div class="infoTitle">Aquí tienes tú progreso esta semana</div>
+            <div class="infoHeader">
+                <p><strong>¡Hola {{username}}!</strong></p>
+                <p>Aquí tienes un resumen de tu progreso en la última semana. Recuerda que la mejor manera de conseguir logros y alcanzar objetivos es mediante la constancia y la perseverancia.</p>
+            </div>
+            <div class="infoBody">
+                <div class="stat">
+                    <div class="infoBodyTitle">
+                        <strong>Lectura</strong>
+                    </div>
+                    <div class="infoBodyText">
+                        <p>{{readText}}</p>
+                        <p>{{readGoal}}</p>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="infoBodyTitle">
+                        <strong>Peso</strong>
+                    </div>
+                    <div class="infoBodyText">
+                        <p>{{weightText}}</p>
+                        <p>{{weightGoal}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="infoFooter">
+                <p>Para actualizar tus progresos o si quieres dejar de recibir estas comunicaciones no olvides entrar a la aplicación <a href="https://personal-app.onrender.com/">con este link</a>.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
