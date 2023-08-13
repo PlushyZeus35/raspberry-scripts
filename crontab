@@ -1,0 +1,4 @@
+0 3 * * 1 cd /scripts/raspberry-scripts/ && /usr/bin/node databaseBackup.js
+0 4 * * * cd /scripts/raspberry-scripts/ && /usr/bin/node birthdayTracker.js
+0 4 * * * cd /scripts/raspberry-scripts/ && /usr/bin/node taskManagement.js
+0 8 * * 0 cd /scripts/raspberry-scripts/ && /usr/bin/node generalTracker.js
