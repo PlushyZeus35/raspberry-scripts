@@ -10,19 +10,35 @@ Backups.databaseDumps = async function(){
     let month = date_time.getMonth() + 1;
     let year = date_time.getFullYear();
     const fileDate = year + "-" + month + "-" + date;
-    const dumpFileName = './backups/' + fileDate + '.sql';
+    const PersonalAppdumpFileName = './backups/' + 'PersonalApp' + fileDate + '.sql';
+    const PlushLearndumpFileName = './backups/' + 'PlusLearn' + fileDate + '.sql';
 
     try{
         mysqldump({
             connection: {
-                host: config.database.host,
-                user: config.database.user,
-                password: config.database.password,
-                database: config.database.database,
+                host: config.database.personalApp.host,
+                user: config.database.personalApp.user,
+                password: config.database.personalApp.password,
+                database: config.database.personalApp.database,
             },
-            dumpToFile: dumpFileName,
+            dumpToFile: PersonalAppdumpFileName,
         });
-        EmailCtrl.sendEmail('plushyzeus35@gmail.com','Database Backup','Database backup bro!',[{filename: fileDate+'.sql', path: dumpFileName}]);
+        EmailCtrl.sendEmail('plushyzeus35@gmail.com','Database Backup','Database backup bro!',[{filename: fileDate+'.sql', path: PersonalAppdumpFileName}]);
+    }catch(error){
+        EmailCtrl.sendErrorMail('Se ha producido un error en un script de servidor','Backup.js',error.toString());
+    }
+
+    try{
+        mysqldump({
+            connection: {
+                host: config.database.plusLearn.host,
+                user: config.database.plusLearn.user,
+                password: config.database.plusLearn.password,
+                database: config.database.plusLearn.database,
+            },
+            dumpToFile: PlushLearndumpFileName,
+        });
+        EmailCtrl.sendEmail('plushyzeus35@gmail.com','Database Backup','Database backup bro!',[{filename: fileDate+'.sql', path: PlushLearndumpFileName}]);
     }catch(error){
         EmailCtrl.sendErrorMail('Se ha producido un error en un script de servidor','Backup.js',error.toString());
     }
