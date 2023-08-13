@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
     database: {
         password: process.env.PERSONALAPP_PASSWORD,
