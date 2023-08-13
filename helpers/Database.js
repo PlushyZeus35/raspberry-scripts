@@ -6,9 +6,9 @@ const config = require('../config');
 DatabaseHelper.openConnection = async function(){
     try{
         const pool = mariadb.createPool({
-            host: config.database.host, 
-            user:config.database.user, 
-            password: config.database.password,
+            host: config.database.personalApp.host, 
+            user:config.database.personalApp.user, 
+            password: config.database.personalApp.password,
             connectionLimit: 5
         });
         const conn = await pool.getConnection();
