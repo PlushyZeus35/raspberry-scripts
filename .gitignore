@@ -128,3 +128,6 @@ dist
 
 # app temp files
 backups/
+
+# python temp files
+__pycache__
