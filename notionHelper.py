@@ -1,14 +1,18 @@
 import requests
 import os
+from datetime import datetime
 from dotenv import load_dotenv
 from mealPlanner import Meal, MealPlan
+from birthdayUtils import Birthday
 load_dotenv()
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 MEALDB_ID = os.getenv("MEALS_NOTIONDB")
 PLANDB_ID = os.getenv("MEALPLAN_NOTIONDB")
+BITHDAY_ID = os.getenv("BITHDAY_NOTIONDB")
 MEALQUERY_URL = f'https://api.notion.com/v1/databases/{MEALDB_ID}/query'
 PLANQUERY_URL = f'https://api.notion.com/v1/databases/{PLANDB_ID}/query'
+BIRTHDAYQUERY_URL = f'https://api.notion.com/v1/databases/{BITHDAY_ID}/query'
 EDITPAGE_URL = f'https://api.notion.com/v1/pages/'
 headers = {'Authorization': f"Bearer {NOTION_TOKEN}", 
            'Content-Type': 'application/json', 
@@ -48,7 +52,6 @@ class NotionUtils:
         return MealPlan(mealPlanId, mealPlanDay, mealPlanMealList)
     
     def setMeals(dayId, meals):
-        # [{"id": EXAMPLEMEAL1},{"id": EXAMPLEMEAL2}]
         editUrl = EDITPAGE_URL + dayId
         search_params = {
             "properties": {
@@ -59,3 +62,17 @@ class NotionUtils:
             editUrl, 
             json = search_params, headers=headers)
         return search_response.json()
+    
+    def getBirthdays():
+        date_format = "%Y-%m-%d"
+        search_params = {}
+        births = []
+        search_response = requests.post(
+            BIRTHDAYQUERY_URL, 
+            json = search_params, headers=headers)
+        for birth in search_response.json()["results"]:
+            name = birth["properties"]["Nombre"]["title"][0]["text"]["content"]
+            date = birth["properties"]["Fecha"]["date"]["start"]
+            births.append(Birthday(name, datetime.strptime(date, date_format)))
+        return births
+        
