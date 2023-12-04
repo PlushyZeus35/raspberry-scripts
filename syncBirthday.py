@@ -1,7 +1,7 @@
 from notionHelper import NotionUtils
 from googleUtils import GoogleEvent
 from googleHelper import GoogleHelper
-
+SCRIPTNAME = 'Birth Sync'
 BIRTHDAY_CALENDAR = '963f9f32449806b9e2227be46a906f3d68b0aae9898d35e93909012d96298751@group.calendar.google.com'
 birthdays = NotionUtils.getBirthdays()
 google = GoogleHelper()
@@ -18,3 +18,5 @@ for birth in birthdays:
         newGoogleEvent = google.createEvent(gogEvent.event, BIRTHDAY_CALENDAR)
         if isinstance(newGoogleEvent, GoogleEvent):
             NotionUtils.updateBirthdayGoogleId(birth.id, newGoogleEvent.id)
+
+NotionUtils.createLog(name=SCRIPTNAME, tags=['cron'])

@@ -3,7 +3,7 @@ from telegramUtils import TelegramUtils
 from datetime import datetime, date
 birthdays = NotionUtils.getBirthdays()
 todaysBirthdays = []
-
+SCRIPTNAME = 'Birthday Notify'
 for birth in birthdays:
     if birth.isToday:
         todaysBirthdays.append(birth)
@@ -13,3 +13,4 @@ if len(todaysBirthdays) > 0:
     for birth in todaysBirthdays:
         telegramMessage += f'{birth.name} cumple {birth.age} años.\n'
     TelegramUtils.sendMessage(telegramMessage)
+NotionUtils.createLog(name=SCRIPTNAME, tags=['cron'])

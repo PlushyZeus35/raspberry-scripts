@@ -14,11 +14,20 @@ MEALQUERY_URL = f'https://api.notion.com/v1/databases/{MEALDB_ID}/query'
 PLANQUERY_URL = f'https://api.notion.com/v1/databases/{PLANDB_ID}/query'
 BIRTHDAYQUERY_URL = f'https://api.notion.com/v1/databases/{BITHDAY_ID}/query'
 EDITPAGE_URL = f'https://api.notion.com/v1/pages/'
+LOGDB_ID = '4bc6be7ca0234ec9bd2ac6b43688af20'
 headers = {'Authorization': f"Bearer {NOTION_TOKEN}", 
            'Content-Type': 'application/json', 
            'Notion-Version': '2022-06-28'}
 
 class NotionUtils:
+    def getPage(pageId):
+        print(EDITPAGE_URL + pageId)
+        search_params = {}
+        search_response = requests.get(
+            EDITPAGE_URL + pageId, 
+            json = search_params, headers=headers)
+        return search_response.json()
+        
     def getMealList():
         mealList = []
         search_params = {}
@@ -88,6 +97,40 @@ class NotionUtils:
         }
         search_response = requests.patch(
             editUrl, 
+            json = search_params, headers=headers)
+        return search_response.json()
+    
+    def createLog(name='', description='', amount=None, tags=[]):
+        notionTags = []
+        for tag in tags:
+            notionTags.append({"name": tag})
+        search_params = {
+            "parent": { "database_id": LOGDB_ID },
+            "properties": {
+                "Nombre": {
+                    "title": [
+                        {
+                            "text": {
+                                "content": name
+                            }
+                        }
+                    ]
+                },
+                "Descripcion": {
+                    "rich_text": [
+                        {
+                            "text": {
+                                "content": description
+                            }
+                        }
+                    ]
+                },
+                "Etiquetas": {"multi_select": notionTags},
+                "Cantidad": { "number": amount }
+            }
+        }
+        search_response = requests.post(
+            EDITPAGE_URL, 
             json = search_params, headers=headers)
         return search_response.json()
         

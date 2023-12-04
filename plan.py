@@ -1,6 +1,6 @@
 from mealPlanner import MealPlanner
 from notionHelper import NotionUtils
-
+SCRIPTNAME = 'Meal Planner'
 meals = NotionUtils.getMealList()
 plans = NotionUtils.getMealPlan()
 planDictionary = {}
@@ -14,3 +14,4 @@ for day in planner.planNotionFormat:
     targetPlan = planDictionary[day]
     targetPlan.meals = planner.planNotionFormat[day]
     NotionUtils.setMeals(targetPlan.id, targetPlan.meals)
+NotionUtils.createLog(name=SCRIPTNAME, tags=['cron'])
