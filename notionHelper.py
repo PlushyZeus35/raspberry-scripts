@@ -73,6 +73,21 @@ class NotionUtils:
         for birth in search_response.json()["results"]:
             name = birth["properties"]["Nombre"]["title"][0]["text"]["content"]
             date = birth["properties"]["Fecha"]["date"]["start"]
-            births.append(Birthday(name, datetime.strptime(date, date_format)))
+            googleId = birth["properties"]["googleId"]['rich_text']
+            googleId = googleId[0]['text']['content'] if len(googleId)>0 else None
+            pageId = birth["id"]
+            births.append(Birthday(name, datetime.strptime(date, date_format), googleId, pageId))
         return births
+    
+    def updateBirthdayGoogleId(birthId, googleId):
+        editUrl = EDITPAGE_URL + birthId
+        search_params = {
+            "properties": {
+                "googleId": { "rich_text": [{'text': {'content': googleId}}] }
+            }
+        }
+        search_response = requests.patch(
+            editUrl, 
+            json = search_params, headers=headers)
+        return search_response.json()
         

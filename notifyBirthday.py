@@ -3,6 +3,7 @@ from telegramUtils import TelegramUtils
 from datetime import datetime, date
 birthdays = NotionUtils.getBirthdays()
 todaysBirthdays = []
+
 for birth in birthdays:
     if birth.isToday:
         todaysBirthdays.append(birth)
