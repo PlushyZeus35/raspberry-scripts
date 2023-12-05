@@ -9,7 +9,8 @@ for birth in birthdays:
         todaysBirthdays.append(birth)
 
 if len(todaysBirthdays) > 0:
-    telegramMessage = f'<strong>Cumpleaños de hoy {date.today().strftime('%d %m')}</strong>\n'
+    cDate = date.today().strftime('%d %m')
+    telegramMessage = f'<strong>Cumpleaños de hoy {cDate}</strong>\n'
     for birth in todaysBirthdays:
         telegramMessage += f'{birth.name} cumple {birth.age} años.\n'
     TelegramUtils.sendMessage(telegramMessage)
