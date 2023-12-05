@@ -3,7 +3,7 @@ from telegramUtils import TelegramUtils
 from datetime import datetime, date
 birthdays = NotionUtils.getBirthdays()
 todaysBirthdays = []
-SCRIPTNAME = 'Birthday Notify'
+SCRIPTNAME = 'Birth Notify'
 for birth in birthdays:
     if birth.isToday:
         todaysBirthdays.append(birth)

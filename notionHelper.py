@@ -4,24 +4,28 @@ from datetime import datetime
 from dotenv import load_dotenv
 from mealPlanner import Meal, MealPlan
 from birthdayUtils import Birthday
+from reentalUtils import ReentalToken
 load_dotenv()
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 MEALDB_ID = os.getenv("MEALS_NOTIONDB")
 PLANDB_ID = os.getenv("MEALPLAN_NOTIONDB")
 BITHDAY_ID = os.getenv("BITHDAY_NOTIONDB")
+LOGDB_ID = os.getenv("LOG_NOTIONDB")
+REENTALTOKEN_ID = os.getenv("REENTALTOKEN_NOTIONDB")
+AUTOMATIONDB_ID = os.getenv("REENTALAUTOMATION_NOTIONDB")
 MEALQUERY_URL = f'https://api.notion.com/v1/databases/{MEALDB_ID}/query'
 PLANQUERY_URL = f'https://api.notion.com/v1/databases/{PLANDB_ID}/query'
 BIRTHDAYQUERY_URL = f'https://api.notion.com/v1/databases/{BITHDAY_ID}/query'
+REENTALTOKENQUERY_URL = f'https://api.notion.com/v1/databases/{REENTALTOKEN_ID}/query'
+AUTOMATION_URL = f'https://api.notion.com/v1/databases/{AUTOMATIONDB_ID}/query'
 EDITPAGE_URL = f'https://api.notion.com/v1/pages/'
-LOGDB_ID = '4bc6be7ca0234ec9bd2ac6b43688af20'
 headers = {'Authorization': f"Bearer {NOTION_TOKEN}", 
            'Content-Type': 'application/json', 
            'Notion-Version': '2022-06-28'}
 
 class NotionUtils:
     def getPage(pageId):
-        print(EDITPAGE_URL + pageId)
         search_params = {}
         search_response = requests.get(
             EDITPAGE_URL + pageId, 
@@ -99,8 +103,25 @@ class NotionUtils:
             editUrl, 
             json = search_params, headers=headers)
         return search_response.json()
-    
-    def createLog(name='', description='', amount=None, tags=[]):
+
+    def createLog( name='', description='', amount=None, tags=[]):
+        automationId = ''
+        # Get automation id
+        search_params = {
+            "filter": {
+                "property": "Nombre",
+                "title": {
+                    "equals": name
+                }
+            }
+        }
+        search_response = requests.post(
+            AUTOMATION_URL, 
+            json = search_params, headers=headers)
+        results = search_response.json()['results']
+        if len(results)>0:
+            automationId = results[0]['id']
+        print(automationId)
         notionTags = []
         for tag in tags:
             notionTags.append({"name": tag})
@@ -129,8 +150,39 @@ class NotionUtils:
                 "Cantidad": { "number": amount }
             }
         }
+        if automationId!='':
+            search_params['properties']['Automatizaciones']={'relation': [{'id': automationId}]}
         search_response = requests.post(
             EDITPAGE_URL, 
             json = search_params, headers=headers)
         return search_response.json()
-        
+    
+    def getReentalTokens():
+        search_params = {}
+        reentalTokens = []
+        search_response = requests.post(
+            REENTALTOKENQUERY_URL, 
+            json = search_params, headers=headers)
+        for token in search_response.json()['results']:
+            nId = token['id']
+            name = token['properties']['Nombre']['title'][0]['text']['content']
+            tokenName = token['properties']['Token']['rich_text'][0]['text']['content']
+            amount = token['properties']['Cantidad']['number']
+            currency = token['properties']['Divisa']['select']['name']
+            eurValue = token['properties']['Valor euros']['number']
+            dolValue = token['properties']['Valor dólares']['number']
+            finValue = token['properties']['Valor real']['number']
+            reentalTokens.append(ReentalToken(name, tokenName, amount, currency, eurValue, dolValue, finValue, nId))
+        return reentalTokens
+    
+    def updateReentalTokenFinalValue(notionId, finalValue):
+        editUrl = EDITPAGE_URL + notionId
+        search_params = {
+            "properties": {
+                "Valor real": { "number": finalValue }
+            }
+        }
+        search_response = requests.patch(
+            editUrl, 
+            json = search_params, headers=headers)
+        return search_response.json()
