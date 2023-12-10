@@ -2,6 +2,8 @@ import datetime
 import os.path
 import json
 
+from notionHelper import NotionUtils
+
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -16,9 +18,14 @@ CREDFILE = 'keys/credentials.json'
 
 class GoogleHelper:
     def __init__(self) -> None:
+        self._creds = None
         self.refreshToken()
 
     def refreshToken(self):
+        
+        with open(TOKENFILE, "w") as token:
+            token.write(NotionUtils.getToken('Google Calendar'))
+
         if os.path.exists(TOKENFILE):
             self._creds = Credentials.from_authorized_user_file(TOKENFILE, SCOPES)
         # If there are no (valid) credentials available, let the user log in.

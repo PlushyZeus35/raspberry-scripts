@@ -14,9 +14,11 @@ BITHDAY_ID = os.getenv("BITHDAY_NOTIONDB")
 LOGDB_ID = os.getenv("LOG_NOTIONDB")
 REENTALTOKEN_ID = os.getenv("REENTALTOKEN_NOTIONDB")
 AUTOMATIONDB_ID = os.getenv("REENTALAUTOMATION_NOTIONDB")
+TOKENDB_ID = os.getenv("REENTALTOKEN_NOTIONDB")
 MEALQUERY_URL = f'https://api.notion.com/v1/databases/{MEALDB_ID}/query'
 PLANQUERY_URL = f'https://api.notion.com/v1/databases/{PLANDB_ID}/query'
 BIRTHDAYQUERY_URL = f'https://api.notion.com/v1/databases/{BITHDAY_ID}/query'
+TOKENQUERY_URL = f'https://api.notion.com/v1/databases/{TOKENDB_ID}/query'
 REENTALTOKENQUERY_URL = f'https://api.notion.com/v1/databases/{REENTALTOKEN_ID}/query'
 AUTOMATION_URL = f'https://api.notion.com/v1/databases/{AUTOMATIONDB_ID}/query'
 EDITPAGE_URL = f'https://api.notion.com/v1/pages/'
@@ -103,6 +105,28 @@ class NotionUtils:
             editUrl, 
             json = search_params, headers=headers)
         return search_response.json()
+    
+    def getToken(service=''):
+        search_params = {
+            "filter": {
+                "property": "Nombre",
+                "title": {
+                    "equals": service
+                }
+            }
+        }
+        search_response = requests.post(
+            TOKENQUERY_URL, 
+            json = search_params, headers=headers)
+        results = search_response.json()['results']
+        if(len(results)>0):
+            returnToken = ""
+            for tokenarr in results[0]['properties']['Token']['rich_text']:
+                returnToken += tokenarr['text']['content']
+            return returnToken
+        else:
+            return ''
+        pass
 
     def createLog( name='', description='', amount=None, tags=[]):
         automationId = ''
