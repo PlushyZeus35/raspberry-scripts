@@ -19,6 +19,10 @@ class ReentalToken():
         return self._realValue
     
     @property
+    def name(self):
+        return self._name
+
+    @property
     def eurValue(self):
         return self._eurValue
     
@@ -29,6 +33,10 @@ class ReentalToken():
     @property
     def notionId(self):
         return self._nId
+    
+    @property
+    def amount(self):
+        return self._amount
 
     def updateRealValue(self):
         if self._currency == 'Euro':

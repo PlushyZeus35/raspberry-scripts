@@ -11,10 +11,11 @@ NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 MEALDB_ID = os.getenv("MEALS_NOTIONDB")
 PLANDB_ID = os.getenv("MEALPLAN_NOTIONDB")
 BITHDAY_ID = os.getenv("BITHDAY_NOTIONDB")
+DIVIDEND_ID = os.getenv("DIVIDEND_NOTIONDB")
 LOGDB_ID = os.getenv("LOG_NOTIONDB")
 REENTALTOKEN_ID = os.getenv("REENTALTOKEN_NOTIONDB")
 AUTOMATIONDB_ID = os.getenv("REENTALAUTOMATION_NOTIONDB")
-TOKENDB_ID = os.getenv("REENTALTOKEN_NOTIONDB")
+TOKENDB_ID = os.getenv("TOKEN_NOTIONDB")
 MEALQUERY_URL = f'https://api.notion.com/v1/databases/{MEALDB_ID}/query'
 PLANQUERY_URL = f'https://api.notion.com/v1/databases/{PLANDB_ID}/query'
 BIRTHDAYQUERY_URL = f'https://api.notion.com/v1/databases/{BITHDAY_ID}/query'
@@ -33,7 +34,59 @@ class NotionUtils:
             EDITPAGE_URL + pageId, 
             json = search_params, headers=headers)
         return search_response.json()
+    
+    def getReentalToken(tokenName):
+        search_params = {
+            "filter": {
+                "property": "Nombre",
+                "title": {
+                    "equals": tokenName
+                }
+            }
+        }
+        search_response = requests.post(
+            REENTALTOKENQUERY_URL, 
+            json = search_params, headers=headers)
+        tokens = search_response.json()['results']
+        if len(tokens)>0:
+            token = tokens[0]
+            nId = token['id']
+            name = token['properties']['Nombre']['title'][0]['text']['content']
+            tokenName = token['properties']['Token']['rich_text'][0]['text']['content']
+            amount = token['properties']['Cantidad']['number']
+            currency = token['properties']['Divisa']['select']['name']
+            eurValue = token['properties']['Valor euros']['number']
+            dolValue = token['properties']['Valor dólares']['number']
+            finValue = token['properties']['Valor real']['number']
+            return ReentalToken(name, tokenName, amount, currency, eurValue, dolValue, finValue, nId)
+        else:
+            return {}
         
+    def createReentalDividend(name, rendimiento, rendimientoFinal, notionId, tags):
+        search_params = {
+            "parent": { "database_id": DIVIDEND_ID },
+            "properties": {
+                "Nombre": {
+                    "title": [
+                        {
+                            "text": {
+                                "content": name
+                            }
+                        }
+                    ]
+                },
+                "Etiquetas": {"multi_select": tags},
+                "Rendimiento": { "number": rendimiento },
+                "Rendimiento final": {"number": rendimientoFinal},
+                "Token": {'relation': [{'id': notionId}]}
+            }
+        }
+        search_response = requests.post(
+            EDITPAGE_URL, 
+            json = search_params, headers=headers
+        )
+        return search_response.json()
+
     def getMealList():
         mealList = []
         search_params = {}
